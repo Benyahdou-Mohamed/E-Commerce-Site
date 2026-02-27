@@ -13,7 +13,7 @@ class Database
     {
         if (self::$instance === null) {
             $host = 'localhost';
-            $db   = 'ecommerce';
+            $db = 'eCommerce';
             $user = 'root';
             $pass = '';
 
