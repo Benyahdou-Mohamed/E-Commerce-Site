@@ -62,3 +62,15 @@ $result = OrderResolver::createOrder([
 ]);
 
 echo $result ? "Order created!\n" : "Order failed!\n";
+
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\GraphQL\Schema;
+use GraphQL\GraphQL;
+
+$schema = Schema::build();
+$query  = '{ products { id name } }';
+$result = GraphQL::executeQuery($schema, $query);
+
+print_r($result->toArray());
