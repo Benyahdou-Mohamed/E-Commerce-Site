@@ -1,3 +1,5 @@
+<?php
+
 namespace App\Models\Category; 
 
 
@@ -16,12 +18,12 @@ class AbstractCategory {
     {
         return $this->name;
     }
-    public function getArray():array 
+    public function toArray():array 
     {
         return [
             "id" => $this->id,
             "name" => $this->name,
-        ]
+        ];
     }
 
 

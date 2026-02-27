@@ -1,4 +1,9 @@
+<?php
+
 namespace App\Models\Category; 
 
 
-class DefaultCatgory {}
+class DefaultCategory extends AbstractCategory {
+
+
+}

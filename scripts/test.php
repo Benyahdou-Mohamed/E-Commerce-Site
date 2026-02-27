@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\GraphQL\Resolvers\ProductResolver;
-
+use App\GraphQL\Resolvers\CategoryResolver;
 echo "Testing ProductResolver...\n\n";
 
 // Test 1 — get all products
@@ -36,3 +36,29 @@ if ($product) {
 } else {
     echo "Product not found!\n";
 }
+
+// Test 3 — get categories
+echo "=== CATEGORIES ===\n";
+$categories = CategoryResolver::getAll();
+foreach ($categories as $cat) {
+    echo "- {$cat['id']}: {$cat['name']}\n";
+}
+
+use App\GraphQL\Resolvers\OrderResolver;
+
+echo "=== CREATE ORDER ===\n";
+
+$result = OrderResolver::createOrder([
+    [
+        'productId'          => 'ps-5',
+        'quantity'           => 2,
+        'selectedAttributes' => ['Color' => '#44FF03', 'Capacity' => '512G'],
+    ],
+    [
+        'productId'          => 'apple-airtag',
+        'quantity'           => 1,
+        'selectedAttributes' => [],
+    ],
+]);
+
+echo $result ? "Order created!\n" : "Order failed!\n";
