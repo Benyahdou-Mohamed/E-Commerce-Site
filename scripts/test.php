@@ -57,7 +57,7 @@ $result = OrderResolver::createOrder([
     [
         'productId'          => 'apple-airtag',
         'quantity'           => 1,
-        'selectedAttributes' => [],
+        'selectedAttributes' => "{}",
     ],
 ]);
 
