@@ -5,6 +5,13 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [tailwindcss(), react()],
   server: {
-    allowedHosts: true, // ← allows everything
+    proxy: {
+      '/api': {
+        target: 'https://ecommerce240620.byethost6.com/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  
   },
 });
