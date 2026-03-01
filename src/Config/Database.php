@@ -12,17 +12,21 @@ class Database
     public static function getInstance(): PDO
     {
         if (self::$instance === null) {
-            $host = 'localhost';
-            $db = 'eCommerce';
-            $user = 'root';
-            $pass = '';
+            $host = getenv('MYSQLHOST')     ?: 'localhost';
+            $db   = getenv('MYSQL_DATABASE') ?: 'railway';
+            $user = getenv('MYSQLUSER')     ?: 'root';
+            $pass = getenv('MYSQLPASSWORD') ?: '';
+            $port = getenv('MYSQLPORT')     ?: '3306';
 
             try {
                 self::$instance = new PDO(
-                    "mysql:host=$host;dbname=$db;charset=utf8mb4",
+                    "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4",
                     $user,
                     $pass,
-                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                    [
+                        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    ]
                 );
             } catch (PDOException $e) {
                 throw new \RuntimeException('DB Connection failed: ' . $e->getMessage());
