@@ -8,7 +8,7 @@ import { ApolloProvider } from "@apollo/client/react";
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "https://ecommerceweb.42web.io/public/index.php",
+    uri: "https://ecommerce240620.byethost6.com/",
   }),
   cache: new InMemoryCache(),
 });
