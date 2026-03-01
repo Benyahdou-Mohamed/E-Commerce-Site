@@ -1,30 +1,36 @@
 <?php
 
-namespace App\Models\Category; 
+namespace App\Models\Category;
 
-
-class AbstractCategory {
+abstract class AbstractCategory
+{
     protected int $id;
     protected string $name;
 
-    public function __construct(array $data){
-        $this->id = (int) $data["id"];
-        $this->name = $data["name"];
+    public function __construct(array $data)
+    {
+        $this->id   = (int) $data['id'];
+        $this->name = $data['name'];
     }
-    public function getId():int{
+
+    // Each subclass must implement this
+    abstract public function isAll(): bool;
+
+    public function getId(): int
+    {
         return $this->id;
     }
+
     public function getName(): string
     {
         return $this->name;
     }
-    public function toArray():array 
+
+    public function toArray(): array
     {
         return [
-            "id" => $this->id,
-            "name" => $this->name,
+            'id'   => $this->id,
+            'name' => $this->name,
         ];
     }
-
-
 }

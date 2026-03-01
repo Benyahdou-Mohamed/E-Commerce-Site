@@ -12,11 +12,11 @@ use App\GraphQL\Types\CurrencyType;
 class TypeRegistry
 {
     private static ?CategoryType $category  = null;
-    private static ?ProductType  $product  = null;
+    private static ?ProductType $product  = null;
     private static ?AttributeSetType $attributeSet = null;
     private static ?AttributeItemType $attributeItem = null;
-    private static ?PriceType  $price = null;
-    private static ?CurrencyType  $currency = null;
+    private static ?PriceType $price = null;
+    private static ?CurrencyType $currency = null;
 
     public static function category(): CategoryType
     {

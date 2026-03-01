@@ -12,16 +12,16 @@ class ProductType extends ObjectType
     {
         parent::__construct([
             'name'   => 'Product',
-            'fields' => function () {       // ← wrap in function
+            'fields' => function () {
                 return [
                     'id' =>  Type::string(),
                     'name' => Type::string(),
                     'inStock' =>  Type::boolean(),
-                    'gallery'=> Type::listOf(Type::string()),
-                    'description'=> Type::string(),
+                    'gallery' => Type::listOf(Type::string()),
+                    'description' => Type::string(),
                     'brand' => Type::string(),
                     'category' => Type::string(),
-                    'prices'=> Type::listOf(TypeRegistry::price()),
+                    'prices' => Type::listOf(TypeRegistry::price()),
                     'attributes' => Type::listOf(TypeRegistry::attributeSet()),
                 ];
             },

@@ -10,6 +10,8 @@ class OrderResolver
 {
     public static function createOrder(array $items): bool
     {
+        error_log("=== CREATE ORDER CALLED ===");
+        error_log("Items: " . json_encode($items));
         $db = Database::getInstance();
 
         try {
@@ -31,7 +33,7 @@ class OrderResolver
                 $orderItem = new OrderItem([
                     'product_id'          => $item['productId'],
                     'quantity'            => $item['quantity'],
-                    'selected_attributes' => $item['selectedAttributes'] ?? [],
+                    'selected_attributes' => $item['selectedAttributes'] ?? "{}",
                 ]);
 
                 $stmt = $db->prepare("
@@ -43,9 +45,9 @@ class OrderResolver
 
                 $stmt->execute([
                     ':order_id'            => $orderId,
-                    ':product_id'          => $orderItem->getProductId(),
-                    ':quantity'            => $orderItem->getQuantity(),
-                    ':selected_attributes' => json_encode($orderItem->getSelectedAttributes()),
+                    ':product_id'          => $item['productId'],
+                    ':quantity'            => $item['quantity'],
+                    ':selected_attributes' => $item['selectedAttributes'] ?? '{}',
                 ]);
             }
 
@@ -53,10 +55,10 @@ class OrderResolver
             $db->commit();
 
             return true;
-
         } catch (\Throwable $e) {
             // Something went wrong — undo everything
             $db->rollBack();
+            error_log("Order error: " . $e->getMessage());
             return false;
         }
     }

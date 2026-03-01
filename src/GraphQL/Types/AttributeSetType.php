@@ -12,7 +12,8 @@ class AttributeSetType extends ObjectType
     {
         parent::__construct([
             'name'   => 'AttributeSet',
-            'fields' => function () {       // ← wrap in function
+            'fields' => function () {
+       // ← wrap in function
                 return [
                     'id'    => Type::string(),
                     'name'  => Type::string(),

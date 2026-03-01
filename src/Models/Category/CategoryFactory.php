@@ -1,11 +1,17 @@
 <?php
-namespace App\Models\Category; 
+namespace App\Models\Category;
 
-class categoryFactory{
+class CategoryFactory
+{
+    private static array $typeMap = [
+        'all'     => AllCategory::class,
+        'default' => DefaultCategory::class,
+    ];
+
     public static function create(array $data): AbstractCategory
     {
-        return new DefaultCategory($data);
+        $type  = $data['name'] === 'all' ? 'all' : 'default';
+        $class = self::$typeMap[$type];
+        return new $class($data);
     }
-    
-
 }

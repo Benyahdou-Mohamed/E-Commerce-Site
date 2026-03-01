@@ -6,13 +6,13 @@ class OrderItem
 {
     private string $productId;
     private int $quantity;
-    private array $selectedAttributes;
+    private string $selectedAttributes;
 
     public function __construct(array $data)
     {
         $this->productId          = $data['product_id'];
         $this->quantity           = (int) $data['quantity'];
-        $this->selectedAttributes = $data['selected_attributes'] ?? [];
+        $this->selectedAttributes = $data['selected_attributes'] ?? "{}";
     }
 
     public function getProductId(): string
@@ -25,7 +25,7 @@ class OrderItem
         return $this->quantity;
     }
 
-    public function getSelectedAttributes(): array
+    public function getSelectedAttributes(): string
     {
         return $this->selectedAttributes;
     }

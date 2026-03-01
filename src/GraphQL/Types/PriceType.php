@@ -12,10 +12,11 @@ class PriceType extends ObjectType
     {
         parent::__construct([
             'name'   => 'Price',
-            'fields' => function () {       // ← wrap in function
+            'fields' => function () {
+       // ← wrap in function
                 return [
-                    'amount'   => ['type' => Type::float()],
-                    'currency' => ['type' => TypeRegistry::currency()],
+                    'amount'   => Type::float(),
+                    'currency' => TypeRegistry::currency(),
                 ];
             },
         ]);
