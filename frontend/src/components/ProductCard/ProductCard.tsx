@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { GET_PRODUCTS } from "../../graphql/queries";
 import type { Product } from "../../types";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 type Props = {
   product: Product;
 };
@@ -14,6 +15,22 @@ export const ProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/product/${product.id}`);
+  };
+  const { addToCart, setIsCartOpen } = useCart();
+
+  const handleQuickShop = (e: React.MouseEvent, product: Product): void => {
+    var selectedAttributes: Record<string, string> = {};
+    e.stopPropagation();
+    if (product.attributes[0]?.type === "text") {
+      product.attributes.map((att) => {
+        //selectedAttributes[att.id] = att.items[0].value;
+        const id = att.id;
+        const item = att.items[0].value;
+        selectedAttributes = { ...selectedAttributes, [id]: item };
+      });
+    }
+    addToCart(product, selectedAttributes);
+    setIsCartOpen(true);
   };
   return (
     <>
@@ -40,10 +57,10 @@ export const ProductCard = ({ product }: Props) => {
         </div>
         {product.inStock && (
           <button
-            onClick={() => {
-              alert("test");
+            onClick={(e) => {
+              handleQuickShop(e, product);
             }}
-            className="w-16 absolute  bottom-12 right-8 w-12 h-12 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            className="w-16 absolute z-10 bottom-12 right-8 w-12 h-12 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           >
             {/* Cart icon */}
             <img src="circleIcon.png" className="w-20" alt="Add To Cart" />
