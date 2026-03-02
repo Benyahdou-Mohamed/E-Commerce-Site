@@ -1,15 +1,21 @@
 <?php
+
 namespace App\GraphQL\Resolvers;
 
-use App\Models\Category\CategoryFactory;
 use App\Config\Database;
+use App\Models\Category\CategoryFactory;
 
-
-class categoryResolver{
+class CategoryResolver
+{
     public static function getAll(): array
     {
-        $db   = Database::getInstance();
-        $stmt = $db->prepare("SELECT id, name FROM categories");
+        $db = Database::getInstance();
+
+
+        $stmt = $db->prepare(
+            'SELECT id, name FROM categories'
+        );
+
         $stmt->execute();
 
         $categories = [];
@@ -21,4 +27,3 @@ class categoryResolver{
         return $categories;
     }
 }
-

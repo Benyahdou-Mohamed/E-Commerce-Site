@@ -44,7 +44,7 @@ class AttributeResolver
                 ], $items),
             ];
 
-            
+
             $result[] = AttributeFactory::create($attrData)->toArray();
         }
 

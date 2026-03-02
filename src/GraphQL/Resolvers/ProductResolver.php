@@ -33,7 +33,7 @@ class ProductResolver
         foreach ($query->fetchAll() as $row) {
             $row['gallery']    = self::getGallery($row['id']);
             $row['prices']     = self::getPrices($row['id']);
-            $row['attributes'] = AttributeResolver::getByProductId($row['id']); 
+            $row['attributes'] = AttributeResolver::getByProductId($row['id']);
 
             $products[] = ProductFactory::create($row)->toArray();
         }
@@ -98,6 +98,4 @@ class ProductResolver
         }
         return $prices;
     }
-
-
 }
