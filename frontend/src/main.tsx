@@ -8,7 +8,7 @@ import { ApolloProvider } from "@apollo/client/react";
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost/fullstack-test-starter/",
+    uri: "https://ecommerce240620.byethost6.com/",
   }),
   cache: new InMemoryCache(),
 });
