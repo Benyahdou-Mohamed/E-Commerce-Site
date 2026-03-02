@@ -8,7 +8,7 @@ import { ApolloProvider } from "@apollo/client/react";
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost/fullstack-test-starter/",
+    uri: import.meta.env.VITE_API_URL,
   }),
   cache: new InMemoryCache(),
 });

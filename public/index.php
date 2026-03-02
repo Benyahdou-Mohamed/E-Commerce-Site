@@ -6,6 +6,8 @@ use App\GraphQL\Schema;
 use GraphQL\GraphQL;
 use GraphQL\Error\DebugFlag;
 
+
+
 // CORS headers — needed for React frontend
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET,POST, OPTIONS');
@@ -14,6 +16,22 @@ header('Content-Type: application/json');
 header('ngrok-skip-browser-warning: true');
 header('ngrok-skip-browser-warning:', 2);
 
+
+
+set_exception_handler(function(\Throwable $e) {
+    header('Content-Type: application/json');
+    echo json_encode(['errors' => [['message' => $e->getMessage()]]]);
+    exit;
+});
+
+set_error_handler(function($code, $message, $file, $line) {
+    header('Content-Type: application/json');
+    echo json_encode(['errors' => [['message' => "$message in $file on line $line"]]]);
+    exit;
+});
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/..');
+$dotenv->load();
 // Handle preflight request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
