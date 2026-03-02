@@ -18,19 +18,19 @@ header('ngrok-skip-browser-warning:', 2);
 
 
 
-set_exception_handler(function(\Throwable $e) {
+set_exception_handler(function (\Throwable $e) {
     header('Content-Type: application/json');
     echo json_encode(['errors' => [['message' => $e->getMessage()]]]);
     exit;
 });
 
-set_error_handler(function($code, $message, $file, $line) {
+set_error_handler(function ($code, $message, $file, $line) {
     header('Content-Type: application/json');
     echo json_encode(['errors' => [['message' => "$message in $file on line $line"]]]);
     exit;
 });
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__. '/..');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 // Handle preflight request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

@@ -6,7 +6,7 @@ namespace App\Models\Category;
 
 class SpecificCategory extends AbstractCategory
 {
-    // Regular category — filters products by name
+    // Regular category
     public function isAll(): bool
     {
         return false;

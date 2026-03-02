@@ -8,11 +8,8 @@ type Props = {
 
 export const CartOverlay = () => {
   const {
-    addToCart,
     cartItems,
     clearCart,
-    decreaseQuantity,
-    increaseQuantity,
     isCartOpen,
     setIsCartOpen,
     totalCount,
@@ -78,7 +75,7 @@ export const CartOverlay = () => {
         <button
           onClick={handlePlaceOrder}
           disabled={cartItems.length === 0}
-          className="w-full py-3 mt-4 bg-green-500 hover:bg-green-600 text-white text-sm font-medium tracking-widest uppercase transition-colors"
+          className={`w-full py-3 mt-4   ${cartItems.length === 0 ? "bg-gray-500" : "bg-green-500 hover:bg-green-600"}  text-white text-sm font-medium tracking-widest uppercase transition-colors`}
         >
           Place Order
         </button>

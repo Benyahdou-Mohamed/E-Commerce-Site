@@ -1,13 +1,12 @@
 <?php
 
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Config\Database;
 
-$db = Database::getInstance(); 
+$db = Database::getInstance();
 $jsonPath = __DIR__ . '/../scripts/data.json';
-if (!file_exists($jsonPath)){
+if (!file_exists($jsonPath)) {
     die("products.json file not found at $jsonPath");
 }
 $json = file_get_contents($jsonPath);
@@ -19,7 +18,7 @@ if ($data === null) {
 //    die(json_encode($data, JSON_PRETTY_PRINT));
 //}
 echo "Seeding database...\n\n";
-// Categories 
+// Categories
 $categoryIds = [];
 $q = $db->prepare("INSERT IGNORE INTO categories (name) VALUES (:name)");
 
@@ -28,12 +27,12 @@ foreach ($data['data']['categories'] as $category) {
     $categoryIds[$category['name']] = $db->lastInsertId();
 }
 $rows = $db->query("SELECT id ,name FROM categories")->fetchAll();
-foreach($rows as $row){
+foreach ($rows as $row) {
     $categoryIds[$row['name']] = $row['id'];
 }
 
 
-// Atributes 
+// Atributes
 $attrStmt = $db->prepare("
     INSERT IGNORE INTO attributes (id, name, type)
     VALUES (:id, :name, :type)
@@ -53,7 +52,7 @@ foreach ($data['data']['products'] as $product) {
 
         // Insert attribute items
         foreach ($attr['items'] as $item) {
-            $attrItemStmt->execute([':id' => $item['id'],':attribute_id'  => $attr['id'],':display_value' => $item['displayValue'],':value'=> $item['value'],]);
+            $attrItemStmt->execute([':id' => $item['id'],':attribute_id'  => $attr['id'],':display_value' => $item['displayValue'],':value' => $item['value'],]);
         }
     }
 }
