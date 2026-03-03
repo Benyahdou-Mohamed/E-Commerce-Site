@@ -56,6 +56,7 @@ export const ProductPage = (props: Props) => {
             <div className="w-[80px] flex-shrink-0  cursor-pointer">
               {product?.gallery.map((img, index) => (
                 <img
+                  data-testid="product-gallery"
                   className="w-full object-cover"
                   key={index}
                   src={img}
@@ -84,6 +85,7 @@ export const ProductPage = (props: Props) => {
               key={selectedImage}
               src={product?.gallery[selectedImage]}
               alt="Sunset in the mountains"
+              data-testid="product-gallery"
             />
             {product?.gallery?.length !== undefined &&
               product?.gallery?.length !== 1 && (
