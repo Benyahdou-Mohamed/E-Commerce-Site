@@ -27,6 +27,7 @@ export const Header = ({
   const { isCartOpen, setIsCartOpen } = useCart();
   const { totalCount } = useCart();
   // const [visibility, setVisibility] = useState<boolean>(false);
+
   return (
     <nav className="flex justify-between px-20  ">
       {/* LEFT - categories */}
@@ -45,6 +46,7 @@ export const Header = ({
                 ? "border-green-500 text-green-500"
                 : "border-transparent text-gray-700 hover:text-green-500"
             }`}
+            onClick={() => handleNav(category.name)}
           >
             {category.name}
           </Link>

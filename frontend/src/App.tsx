@@ -27,6 +27,12 @@ function App() {
         />
         <Routes>
           <Route path="/" element={<Home category={currentCategory} />} />
+          <Route
+            path="/:category"
+            element={<Home category={currentCategory} />}
+          />
+          <Route path="/" element={<Home category="all" />} />
+
           <Route path="/product/:id" element={<ProductPage />} />
         </Routes>
       </CartProvider>

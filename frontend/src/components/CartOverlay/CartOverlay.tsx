@@ -39,6 +39,7 @@ export const CartOverlay = () => {
       {/* {/* FLOATING CART PANEL */}
       {isCartOpen && (
         <div
+          data-testid="cart-overlay"
           className="fixed left-0 right-0 bottom-0 opacity-40 bg-gray-500  z-40"
           style={{ top: "80px" }} // ← starts below header
           onClick={() => setIsCartOpen(false)}

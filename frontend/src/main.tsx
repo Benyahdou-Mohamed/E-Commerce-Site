@@ -5,10 +5,10 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
-
+import.meta.env;
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "https://scandiwebecommerce.app/fullstack-test-starter/",
+    uri: import.meta.env.VITE_API_URL,
   }),
   cache: new InMemoryCache(),
 });
