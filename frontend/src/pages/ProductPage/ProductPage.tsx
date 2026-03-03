@@ -60,6 +60,8 @@ export const ProductPage = (props: Props) => {
             <div className="flex flex-row sm:flex-col gap-2 overflow-x-auto sm:overflow-y-auto sm:max-h-[500px] sm:w-20 flex-shrink-0">
               {product.gallery.map((img, index) => (
                 <img
+                  data-testid="product-gallery"
+                  className="w-full object-cover"
                   key={index}
                   src={img}
                   onClick={() => setSelectedImage(index)}
@@ -106,60 +108,48 @@ export const ProductPage = (props: Props) => {
               )}
             </div>
           </div>
-
-          {/* PRODUCT DETAILS SECTION */}
-          <div className="flex flex-col lg:w-80 xl:w-96">
-            {/* Name */}
-            <h1 className="text-2xl sm:text-3xl font-semibold mb-4">
-              {product.name}
-            </h1>
-
-            {/* Attributes */}
-            {product.attributes.map((attribute) => (
-              <Attribute
-                key={attribute.id}
-                attribute={attribute}
-                selectedAttributes={selectedAttributes}
-                onSelect={handleSelect}
-              />
-            ))}
-
-            {/* Price */}
-            <div className="my-4">
-              <p className="font-bold uppercase text-sm tracking-wide">
-                Price:
-              </p>
-              <p className="text-2xl font-bold mt-1">
-                {product.prices[0].currency.symbol}
-                {product.prices[0].amount.toFixed(2)}
-              </p>
-            </div>
-
-            {/* Add to cart */}
-            <button
-              data-testid="add-to-cart"
-              onClick={handleAddToCart}
-              disabled={!canAddToCart}
-              className={`
-              w-full sm:w-80 py-3 sm:py-4
-              text-white font-medium tracking-widest uppercase text-sm
-              transition-colors
-              ${
-                canAddToCart
-                  ? "bg-green-500 hover:bg-green-600 cursor-pointer"
-                  : "bg-gray-300 cursor-not-allowed"
-              }
-            `}
-            >
-              ADD TO CART
-            </button>
-
-            {/* Description */}
-            <div
-              data-testid="product-description"
-              className="mt-6 text-gray-600 text-sm leading-relaxed"
-            >
-              {product.description.replace(/<[^>]*>/g, "")}
+          {/* RIGHT — product details */}
+          <div className="flex flex-1 flex-col px-15">
+            <div className="max-w-96">
+              {/* Name */}
+              <div className="text-3xl mb-8">{product?.name}</div>
+              <div className="">
+                {/* Attributes */}
+                {product?.attributes?.map((attribute) => (
+                  <Attribute
+                    key={attribute.id}
+                    attribute={attribute}
+                    selectedAttributes={selectedAttributes}
+                    onSelect={handleSelect}
+                  />
+                ))}
+                {/* Price */}
+                <div className="my-2">
+                  <div className="font-bold">PRICE:</div>
+                  <div className="text-2xl font-bold my-3">
+                    {product?.prices[0].currency.label}{" "}
+                    {product?.prices[0].amount.toFixed(2)}
+                  </div>
+                </div>
+                {/* Add to cart button */}
+                <button
+                  data-testid="add-to-cart"
+                  onClick={handleAddToCart}
+                  className={`w-3xs py-3 text-white font-medium tracking-wider transition-colors ${
+                    canAddToCart
+                      ? "bg-green-500 hover:bg-green-600 cursor-pointer"
+                      : "bg-gray-300 cursor-not-allowed"
+                  }`}
+                >
+                  ADD TO CART
+                </button>
+                <div
+                  data-testid="product-description"
+                  className="mt-8 text-gray-600 text-sm leading-relaxed"
+                >
+                  {product?.description.replace(/<[^>]*>/g, "")}
+                </div>
+              </div>
             </div>
           </div>
         </div>
