@@ -11,6 +11,8 @@ A full-stack e-commerce application built with **PHP GraphQL API** backend and *
 
 ---
 
+https://github.com/user-attachments/assets/1f5abf0b-f5c1-40a5-b812-535f365fad18
+
 ---
 
 ## ✨ Features
