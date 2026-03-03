@@ -41,7 +41,7 @@ CREATE TABLE attribute_items (
     attribute_id  VARCHAR(255) NOT NULL,
     display_value VARCHAR(255) NOT NULL,
     value         VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id, attribute_id),            -- ← fixed
+    PRIMARY KEY (id, attribute_id),     
     FOREIGN KEY (attribute_id) REFERENCES attributes(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

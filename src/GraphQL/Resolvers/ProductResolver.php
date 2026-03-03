@@ -61,7 +61,7 @@ class ProductResolver
 
         $data['gallery']    = self::getGallery($data['id']);
         $data['prices']     = self::getPrices($data['id']);
-        $data['attributes'] = AttributeResolver::getByProductId($data['id']); // ← delegated
+        $data['attributes'] = AttributeResolver::getByProductId($data['id']);
 
         return ProductFactory::create($data)->toArray();
     }

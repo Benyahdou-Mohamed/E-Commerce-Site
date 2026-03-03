@@ -26,7 +26,6 @@ export const Header = ({
   };
   const { isCartOpen, setIsCartOpen } = useCart();
   const { totalCount } = useCart();
-  // const [visibility, setVisibility] = useState<boolean>(false);
 
   return (
     <nav className="flex justify-between px-20  ">
@@ -35,7 +34,7 @@ export const Header = ({
         {categories?.map((category) => (
           <Link
             key={category.id}
-            to={`/${category.name}`} // ← href="/all", href="/clothes"
+            to={`/${category.name}`}
             data-testid={
               currentCategory === category.name
                 ? "active-category-link"
@@ -66,7 +65,6 @@ export const Header = ({
             onClick={() => {
               setIsCartOpen(!isCartOpen);
             }}
-            // onClick={() => setIsCartOpen(!isCartOpen)}
             className="relative py-5"
           >
             <img src="/empty-cart.png" alt="cart" className="h-6" />

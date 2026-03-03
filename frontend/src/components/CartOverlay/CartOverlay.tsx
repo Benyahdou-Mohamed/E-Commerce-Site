@@ -18,7 +18,6 @@ export const CartOverlay = () => {
   const [placeOrder] = useMutation(PLACE_ORDER);
 
   const handlePlaceOrder = async (): Promise<void> => {
-    // console.log("cart items", cartItems);
     const items = cartItems.map((item) => ({
       productId: item.id,
       quantity: item.quantity,
@@ -41,7 +40,7 @@ export const CartOverlay = () => {
         <div
           data-testid="cart-overlay"
           className="fixed left-0 right-0 bottom-0 opacity-40 bg-gray-500  z-40"
-          style={{ top: "80px" }} // ← starts below header
+          style={{ top: "80px" }}
           onClick={() => setIsCartOpen(false)}
         />
       )}

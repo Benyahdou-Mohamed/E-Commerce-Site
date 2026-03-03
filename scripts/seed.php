@@ -14,9 +14,7 @@ $data = json_decode($json, JSON_PRETTY_PRINT);
 if ($data === null) {
     die("ERROR: Invalid JSON - " . json_last_error_msg() . "\n");
 }
-//lse{
-//    die(json_encode($data, JSON_PRETTY_PRINT));
-//}
+
 echo "Seeding database...\n\n";
 // Categories
 $categoryIds = [];

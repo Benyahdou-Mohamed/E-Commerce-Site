@@ -26,7 +26,7 @@ export const CartOfItem = ({ item, index }: Props) => {
           <div
             className="mt-3"
             key={attribute.id}
-            data-testid={`cart-item-attribute-${toKebabCase(attribute.name)}`} // ← added
+            data-testid={`cart-item-attribute-${toKebabCase(attribute.name)}`}
           >
             <p className="text-xs text-gray-500 mb-1">{attribute.name}:</p>
             <div className="flex gap-1 flex-wrap">
@@ -40,7 +40,6 @@ export const CartOfItem = ({ item, index }: Props) => {
                   ? `cart-item-attribute-${kebabAttr}-${kebabVal}-selected`
                   : `cart-item-attribute-${kebabAttr}-${kebabVal}`;
 
-                // ✅ use attribute.type not attribute.name
                 if (attribute.type === "swatch") {
                   return (
                     <div
@@ -82,10 +81,7 @@ export const CartOfItem = ({ item, index }: Props) => {
         >
           +
         </button>
-        <span
-          data-testid="cart-item-amount" // ← added
-          className="font-medium text-sm"
-        >
+        <span data-testid="cart-item-amount" className="font-medium text-sm">
           {item.quantity}
         </span>
         <button
