@@ -8,7 +8,7 @@ import { ApolloProvider } from "@apollo/client/react";
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: import.meta.env.VITE_API_URL,
+    uri: "https://scandiwebecommerce.app/fullstack-test-starter/",
   }),
   cache: new InMemoryCache(),
 });
