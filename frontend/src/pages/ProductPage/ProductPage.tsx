@@ -56,7 +56,6 @@ export const ProductPage = (props: Props) => {
             <div className="w-[80px] flex-shrink-0  cursor-pointer">
               {product?.gallery.map((img, index) => (
                 <img
-                  data-testid="product-gallery"
                   className="w-full object-cover"
                   key={index}
                   src={img}
