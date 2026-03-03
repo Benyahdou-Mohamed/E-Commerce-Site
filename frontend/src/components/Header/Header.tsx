@@ -32,18 +32,22 @@ export const Header = ({
       {/* LEFT - categories */}
       <div className="flex flex-1">
         {categories?.map((category) => (
-          <button
+          <Link
             key={category.id}
+            to={`/${category.name}`} // ← href="/all", href="/clothes"
             data-testid={
               currentCategory === category.name
                 ? "active-category-link"
                 : "category-link"
             }
-            onClick={() => handleNav(category.name)}
-            className={`px-3.5 py-5 border-b-2 ${currentCategory === category.name ? "border-b-green-600" : "border-transparent text-gray-700 hover:text-green-500"}`}
+            className={`px-3.5 py-5 capitalize font-medium border-b-2 transition-colors ${
+              currentCategory === category.name
+                ? "border-green-500 text-green-500"
+                : "border-transparent text-gray-700 hover:text-green-500"
+            }`}
           >
-            {category.name.toUpperCase()}
-          </button>
+            {category.name}
+          </Link>
         ))}
       </div>
       {/* Center - logo */}
