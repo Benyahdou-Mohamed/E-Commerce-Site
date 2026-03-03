@@ -6,30 +6,75 @@ A full-stack e-commerce application built with **PHP GraphQL API** backend and *
 
 ## 🚀 Live Demo
 
-- **Frontend:** [https://e-commerce-site-five-lake.vercel.app](https://e-commerce-site-five-lake.vercel.app)
-- **Backend API:** [https://your-railway-url.railway.app](https://your-railway-url.railway.app)
+- **Frontend:** [https://e-commerce-site-three-tawny.vercel.app/]
+- **Backend API:** [https://scandiwebecommerce.app/fullstack-test-starter/]
+
+---
+
+---
+
+## ✨ Features
+
+### Product Catalog
+
+- Browse products by category
+- Filter products by category (All, Clothes, Tech)
+- Out of stock products displayed with overlay
+- Quick add to cart on product hover
+
+### Product Detail Page
+
+- Image gallery with thumbnail navigation
+- Attribute selection (size, color, capacity)
+- Add to cart disabled until all attributes selected
+- Product description
+
+### Shopping Cart
+
+- Persistent cart via localStorage
+- Add/remove products
+- Adjust quantities
+- Same product with different attributes = separate cart items
+- Cart overlay with dark background
+- Real-time total calculation
+
+### Order Placement
+
+- GraphQL mutation to place orders
+- Stores selected attributes as JSON
+- Cart cleared after successful order
+
+---
+
+## 📋 PSR Compliance
+
+- **PSR-1** — Basic coding standard (PascalCase classes, camelCase methods)
+- **PSR-4** — Autoloading standard (`App\` namespace maps to `src/`)
+- **PSR-12** — Extended coding style (4 spaces, visibility on all methods)
 
 ---
 
 ## 🧱 Tech Stack
 
 ### Backend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| PHP | 8.1+ | Server-side language |
-| MySQL | 5.7 | Database |
-| webonyx/graphql-php | ^15.0 | GraphQL server |
-| PDO | - | Database abstraction |
+
+| Technology          | Version | Purpose              |
+| ------------------- | ------- | -------------------- |
+| PHP                 | 8.1+    | Server-side language |
+| MySQL               | 5.7     | Database             |
+| webonyx/graphql-php | ^15.0   | GraphQL server       |
+| PDO                 | -       | Database abstraction |
 
 ### Frontend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| React | 18 | UI framework |
-| TypeScript | 5 | Type safety |
-| Apollo Client | 3.8 | GraphQL client |
-| React Router | 6 | Client-side routing |
-| Tailwind CSS | 4 | Styling |
-| Vite | 5 | Build tool |
+
+| Technology    | Version | Purpose             |
+| ------------- | ------- | ------------------- |
+| React         | 18      | UI framework        |
+| TypeScript    | 5       | Type safety         |
+| Apollo Client | 3.8     | GraphQL client      |
+| React Router  | 6       | Client-side routing |
+| Tailwind CSS  | 4       | Styling             |
+| Vite          | 5       | Build tool          |
 
 ---
 
@@ -123,6 +168,7 @@ order_items         → id, order_id, product_id, quantity, selected_attributes
 ## 🔷 GraphQL Schema
 
 ### Queries
+
 ```graphql
 # Get all categories
 categories: [Category]
@@ -135,12 +181,14 @@ product(id: String!): Product
 ```
 
 ### Mutations
+
 ```graphql
 # Place an order
 placeOrder(items: [OrderItemInput!]!): Boolean
 ```
 
 ### Types
+
 ```graphql
 type Product {
   id: String
@@ -167,6 +215,7 @@ type AttributeSet {
 ## 🏗️ OOP Architecture
 
 ### Polymorphism in Products
+
 ```
 AbstractProduct (abstract)
 ├── SimpleProduct      → canAddToCart() always returns true
@@ -174,6 +223,7 @@ AbstractProduct (abstract)
 ```
 
 ### Polymorphism in Attributes
+
 ```
 AbstractAttribute (abstract)
 ├── TextAttribute   → handles size, capacity attributes
@@ -181,6 +231,7 @@ AbstractAttribute (abstract)
 ```
 
 ### Polymorphism in Categories
+
 ```
 AbstractCategory (abstract)
 ├── AllCategory      → shows all products (isAll() = true)
@@ -188,6 +239,7 @@ AbstractCategory (abstract)
 ```
 
 ### Factory Pattern
+
 ```
 ProductFactory   → creates SimpleProduct or ConfigurableProduct
 AttributeFactory → creates TextAttribute or SwatchAttribute
@@ -199,6 +251,7 @@ CategoryFactory  → creates AllCategory or SpecificCategory
 ## ⚙️ Backend Setup
 
 ### Requirements
+
 - PHP 8.1+
 - MySQL 5.7+
 - Composer
@@ -227,6 +280,7 @@ php -S localhost:8000 -t public/
 ```
 
 ### Environment Variables
+
 ```
 MYSQLHOST=localhost
 MYSQLPORT=3306
@@ -240,6 +294,7 @@ MYSQLPASSWORD=
 ## ⚛️ Frontend Setup
 
 ### Requirements
+
 - Node.js 18+
 - npm
 
@@ -259,45 +314,19 @@ npm run build
 ```
 
 ### Environment Variables
+
 Create `.env` in frontend root:
+
 ```
 VITE_API_URL=http://localhost:8000/
 ```
 
 ---
 
-## ✨ Features
-
-### Product Catalog
-- Browse products by category
-- Filter products by category (All, Clothes, Tech)
-- Out of stock products displayed with overlay
-- Quick add to cart on product hover
-
-### Product Detail Page
-- Image gallery with thumbnail navigation
-- Attribute selection (size, color, capacity)
-- Add to cart disabled until all attributes selected
-- Product description
-
-### Shopping Cart
-- Persistent cart via localStorage
-- Add/remove products
-- Adjust quantities
-- Same product with different attributes = separate cart items
-- Cart overlay with dark background
-- Real-time total calculation
-
-### Order Placement
-- GraphQL mutation to place orders
-- Stores selected attributes as JSON
-- Cart cleared after successful order
-
----
-
 ## 🔌 API Examples
 
 ### Fetch Products
+
 ```graphql
 query {
   products(category: "clothes") {
@@ -327,31 +356,27 @@ query {
 ```
 
 ### Place Order
+
 ```graphql
 mutation {
-  placeOrder(items: [
-    {
-      productId: "ps-5",
-      quantity: 1,
-      selectedAttributes: "{\"Color\":\"#44FF03\",\"Capacity\":\"512G\"}"
-    }
-  ])
+  placeOrder(
+    items: [
+      {
+        productId: "ps-5"
+        quantity: 1
+        selectedAttributes: "{\"Color\":\"#44FF03\",\"Capacity\":\"512G\"}"
+      }
+    ]
+  )
 }
 ```
-
----
-
-## 📋 PSR Compliance
-
-- **PSR-1** — Basic coding standard (PascalCase classes, camelCase methods)
-- **PSR-4** — Autoloading standard (`App\` namespace maps to `src/`)
-- **PSR-12** — Extended coding style (4 spaces, visibility on all methods)
 
 ---
 
 ## 🧪 Testing
 
 ### Backend Testing
+
 ```bash
 # Test GraphQL schema
 php scripts/testgraphql.php
@@ -361,6 +386,7 @@ php scripts/test.php
 ```
 
 ### Frontend Testing
+
 ```bash
 cd frontend
 npm run dev
@@ -372,11 +398,8 @@ npm run dev
 ## 👤 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+
+- GitHub: [@Benyahdou-Mohamed](https://github.com/Benyahdou-Mohamed)
+- Email: mohammed.benyahdou@univ-tiaret.dz
 
 ---
-
-## 📄 License
-
-This project was developed as part of the Scandiweb Junior Developer Assessment.
