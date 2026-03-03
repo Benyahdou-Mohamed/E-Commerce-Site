@@ -123,6 +123,7 @@ export const ProductPage = (props: Props) => {
                 <button
                   data-testid="add-to-cart"
                   onClick={handleAddToCart}
+                  disabled={!canAddToCart}
                   className={`w-3xs py-3 text-white font-medium tracking-wider transition-colors ${
                     canAddToCart
                       ? "bg-green-500 hover:bg-green-600 cursor-pointer"
