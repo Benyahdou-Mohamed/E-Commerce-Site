@@ -7,7 +7,7 @@ namespace App\Models\Product;
 class ProductFactory
 {
     private static array $typeMap = [
-        'simple'       => SimpleProduct::class,
+        'simple' => SimpleProduct::class,
         'configurable' => ConfigurableProduct::class,
     ];
 

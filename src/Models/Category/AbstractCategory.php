@@ -6,8 +6,8 @@ namespace App\Models\Category;
 
 abstract class AbstractCategory
 {
-    protected int $id;
-    protected string $name;
+    private int $id;
+    private string $name;
 
     public function __construct(array $data)
     {

@@ -6,10 +6,10 @@ namespace App\Models\Attribute;
 
 abstract class AbstractAttribute
 {
-    protected string $id;
-    protected string $name;
-    protected string $type;
-    protected array $items;
+    private string $id;
+    private string $name;
+    private string $type;
+    private array $items;
 
     public function __construct(array $data)
     {

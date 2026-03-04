@@ -12,9 +12,9 @@ class OrderItem
 
     public function __construct(array $data)
     {
-        $this->productId          = $data['product_id'];
-        $this->quantity           = (int) $data['quantity'];
-        $this->selectedAttributes = $data['selected_attributes'] ?? "{}";
+        $this->productId = $data['productId'];
+        $this->quantity  = (int) $data['quantity'];
+        $this->selectedAttributes = $data['selectedAttributes'] ?? "{}";
     }
 
     public function getProductId(): string
@@ -35,8 +35,8 @@ class OrderItem
     public function toArray(): array
     {
         return [
-            'productId'          => $this->productId,
-            'quantity'           => $this->quantity,
+            'productId' => $this->productId,
+            'quantity' => $this->quantity,
             'selectedAttributes' => $this->selectedAttributes,
         ];
     }

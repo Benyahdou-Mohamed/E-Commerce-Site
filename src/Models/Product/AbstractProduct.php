@@ -6,28 +6,28 @@ namespace App\Models\Product;
 
 abstract class AbstractProduct
 {
-    protected string $id;
-    protected string $name;
-    protected bool $inStock;
-    protected int $categoryId;
-    protected string $brand;
-    //protected string $type;
-    protected array $gallery;
+    private string $id;
+    private string $name;
+    private bool $inStock;
+    private int $categoryId;
+    private string $brand;
+    //private string $type;
+    private array $gallery;
 
-    protected array $prices;
-    protected string $description;
+    private array $prices;
+    private string $description;
 
-    protected array $attributes;
-    protected string $categoryName;
+    private array $attributes;
+    private string $categoryName;
 
     public function __construct(array $data)
     {
         $this->id = $data["id"];
         $this->name = $data["name"];
-        $this->inStock = (bool) $data["in_stock"];
+        $this->inStock = (bool) ($data['in_stock'] ?? $data['inStock'] ?? false);
         $this->brand = $data["brand"] ?? "";
         $this->gallery = $data["gallery"] ?? [];
-        $this->categoryId = (int)$data["category_id"];
+        $this->categoryId   = (int) ($data['category_id']   ?? 0);
         $this->prices = $data["prices"] ?? [];
         $this->description = $data["description"] ?? "";
         $this->attributes  = $data['attributes'] ?? [];

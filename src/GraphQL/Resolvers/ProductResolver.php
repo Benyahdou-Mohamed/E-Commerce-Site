@@ -6,7 +6,7 @@ namespace App\GraphQL\Resolvers;
 
 use App\Config\Database;
 use App\Models\Product\ProductFactory;
-
+use App\GraphQL\Resolvers\AttributeResolver;
 class ProductResolver
 {
     public static function getAll(?string $categoryName = null): array

@@ -24,6 +24,7 @@ export const CartOverlay = () => {
 
     try {
       const result = await placeOrder({ variables: { items } });
+      console.log("result", result);
       clearCart();
       setIsCartOpen(false);
     } catch (error) {
