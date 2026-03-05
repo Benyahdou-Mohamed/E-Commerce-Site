@@ -1,13 +1,13 @@
 import { useState } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { Home } from "./Route/Home";
 import { Header } from "./components/Header/Header";
 import { ProductPage } from "./pages/ProductPage/ProductPage";
 import { useQuery } from "@apollo/client/react";
-import { GET_CATEGORIES, GET_PRODUCTS } from "./graphql/queries";
-import type { CategoriesData, ProductsData } from "./types";
+import { GET_CATEGORIES } from "./graphql/queries";
+import type { CategoriesData } from "./types";
 import { CartProvider } from "./context/CartContext";
+import CategoryPage from "./pages/CategoryPage/CategoryPage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,12 +26,15 @@ function App() {
           onCategoryChange={setCurrentCategory}
         />
         <Routes>
-          <Route path="/" element={<Home category={currentCategory} />} />
+          <Route
+            path="/"
+            element={<CategoryPage category={currentCategory} />}
+          />
           <Route
             path="/:category"
-            element={<Home category={currentCategory} />}
+            element={<CategoryPage category={currentCategory} />}
           />
-          <Route path="/" element={<Home category="all" />} />
+          <Route path="/" element={<CategoryPage category="all" />} />
 
           <Route path="/product/:id" element={<ProductPage />} />
         </Routes>

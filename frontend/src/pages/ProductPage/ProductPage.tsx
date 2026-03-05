@@ -1,8 +1,7 @@
 import { useQuery } from "@apollo/client/react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import type { Product, ProductData } from "../../types";
+import type { ProductData } from "../../types";
 import { GET_PRODUCT } from "../../graphql/queries";
 import { useCart } from "../../context/CartContext";
 import Attribute from "../../components/ProductCard/Attribute";
