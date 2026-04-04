@@ -70,7 +70,6 @@ class Schema
         $mutationType = new ObjectType([
             'name'   => 'Mutation',
             'fields' => [
-
                 // Place an order
                 'placeOrder' => [
                     'type' => Type::boolean(),

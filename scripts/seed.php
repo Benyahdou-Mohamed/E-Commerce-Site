@@ -1,36 +1,40 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
 use App\Config\Database;
 
 $db = Database::getInstance();
 $jsonPath = __DIR__ . '/../scripts/data.json';
+
 if (!file_exists($jsonPath)) {
-    die("products.json file not found at $jsonPath");
+    die("data.json file not found at $jsonPath");
 }
+
 $json = file_get_contents($jsonPath);
-$data = json_decode($json, JSON_PRETTY_PRINT);
+$data = json_decode($json, true);
+
 if ($data === null) {
     die("ERROR: Invalid JSON - " . json_last_error_msg() . "\n");
 }
 
 echo "Seeding database...\n\n";
-// Categories
+
+// ─── Categories ───────────────────────────────────────────
 $categoryIds = [];
 $q = $db->prepare("INSERT IGNORE INTO categories (name) VALUES (:name)");
 
 foreach ($data['data']['categories'] as $category) {
     $q->execute([':name' => $category['name']]);
-    $categoryIds[$category['name']] = $db->lastInsertId();
 }
-$rows = $db->query("SELECT id ,name FROM categories")->fetchAll();
+
+$rows = $db->query("SELECT id, name FROM categories")->fetchAll();
 foreach ($rows as $row) {
     $categoryIds[$row['name']] = $row['id'];
 }
 
-
-// Atributes
+// ─── Attributes ───────────────────────────────────────────
 $attrStmt = $db->prepare("
     INSERT IGNORE INTO attributes (id, name, type)
     VALUES (:id, :name, :type)
@@ -43,22 +47,32 @@ $attrItemStmt = $db->prepare("
 
 foreach ($data['data']['products'] as $product) {
     foreach ($product['attributes'] as $attr) {
-        // Insert attribute set
+
+        // ✅ Unique attribute id per product
+        $uniqueAttrId = $product['id'] . '_' . $attr['id'];
+
         $attrStmt->execute([
-            ':id'   => $attr['id'], ':name' => $attr['name'],':type' => $attr['type'],]);
+            ':id'   => $uniqueAttrId,
+            ':name' => $attr['name'],
+            ':type' => $attr['type'],
+        ]);
 
-
-        // Insert attribute items
         foreach ($attr['items'] as $item) {
-            $attrItemStmt->execute([':id' => $item['id'],':attribute_id'  => $attr['id'],':display_value' => $item['displayValue'],':value' => $item['value'],]);
+
+            // ✅ Unique item id per product
+            $uniqueItemId = $product['id'] . '_' . $item['id'];
+
+            $attrItemStmt->execute([
+                ':id'            => $uniqueItemId,
+                ':attribute_id'  => $uniqueAttrId,
+                ':display_value' => $item['displayValue'],
+                ':value'         => $item['value'],
+            ]);
         }
     }
 }
 
-
-//
-//
-//
+// ─── Products ─────────────────────────────────────────────
 $productStmt = $db->prepare("
     INSERT IGNORE INTO products (id, name, in_stock, description, category_id, brand, type)
     VALUES (:id, :name, :in_stock, :description, :category_id, :brand, :type)
@@ -80,7 +94,7 @@ $productAttrStmt = $db->prepare("
 ");
 
 foreach ($data['data']['products'] as $product) {
-    // Get the category_id from our map
+
     $categoryName = $product['category'];
     $categoryId   = $categoryIds[$categoryName] ?? null;
 
@@ -89,10 +103,9 @@ foreach ($data['data']['products'] as $product) {
         continue;
     }
 
-    // Determine product type
-    $type = $categoryName === 'clothes' ? 'configurable' : 'simple';
+    // ✅ Type based on attributes not category
+    $type = !empty($product['attributes']) ? 'configurable' : 'simple';
 
-    // Insert product
     $productStmt->execute([
         ':id'          => $product['id'],
         ':name'        => $product['name'],
@@ -102,9 +115,10 @@ foreach ($data['data']['products'] as $product) {
         ':brand'       => $product['brand'],
         ':type'        => $type,
     ]);
-    echo "  - {$product['name']}\n";
 
-    // Insert gallery images
+    echo "  ✅ {$product['name']} ({$type})\n";
+
+    // Gallery
     foreach ($product['gallery'] as $imageUrl) {
         $galleryStmt->execute([
             ':product_id' => $product['id'],
@@ -112,7 +126,7 @@ foreach ($data['data']['products'] as $product) {
         ]);
     }
 
-    // Insert prices
+    // Prices
     foreach ($product['prices'] as $price) {
         $priceStmt->execute([
             ':product_id'      => $product['id'],
@@ -122,11 +136,15 @@ foreach ($data['data']['products'] as $product) {
         ]);
     }
 
-    // Link product to attributes
+    // ✅ Link product to UNIQUE attribute id
     foreach ($product['attributes'] as $attr) {
+        $uniqueAttrId = $product['id'] . '_' . $attr['id'];
+
         $productAttrStmt->execute([
-            ':product_id'  => $product['id'],
-            ':attribute_id' => $attr['id'],
+            ':product_id'   => $product['id'],
+            ':attribute_id' => $uniqueAttrId,
         ]);
     }
 }
+
+echo "\n✅ Seeding complete!\n";
