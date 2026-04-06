@@ -1,5 +1,10 @@
 import { gql } from "@apollo/client";
 
+/**
+ * GraphQL operations used by the React app.
+ * Variable names match backend resolver arguments.
+ */
+
 export const GET_CATEGORIES = gql`
   query GetCategories {
     categories {

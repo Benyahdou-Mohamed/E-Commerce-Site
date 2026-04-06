@@ -62,5 +62,5 @@ try {
         ]
     ];
 }
-
 echo json_encode($output);
+

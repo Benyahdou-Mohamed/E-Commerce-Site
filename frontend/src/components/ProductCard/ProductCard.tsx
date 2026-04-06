@@ -21,13 +21,15 @@ export const ProductCard = ({ product }: Props) => {
 
   const handleQuickShop = (e: React.MouseEvent, product: Product): void => {
     e.stopPropagation();
+
     let selectedAttributes: Record<string, string> = {};
 
     if (product.attributes[0]?.type === "text") {
       product.attributes.forEach((att) => {
-        const id = att.id;
-        const item = att.items[0].value;
-        selectedAttributes = { ...selectedAttributes, [id]: item };
+        selectedAttributes = {
+          ...selectedAttributes,
+          [att.id]: att.items[0].value,
+        };
       });
     }
 
@@ -39,40 +41,72 @@ export const ProductCard = ({ product }: Props) => {
     <div
       data-testid={`product-${toKebabCase(product.name)}`}
       onClick={handleClick}
-      className="relative bg-transparent rounded overflow-hidden hover:shadow-lg hover:cursor-pointer p-4 pb-6 mb-8 flex flex-col"
+      className="
+        group
+        relative bg-transparent
+        rounded overflow-hidden
+        hover:shadow-lg cursor-pointer
+        p-4 pb-6 mb-4
+        flex flex-col
+      "
     >
-      <div className="w-full relative">
+      {/*  Square image box using aspect-square */}
+      <div className="relative w-full aspect-square">
         <img
-          className="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] object-cover rounded"
+          className="
+            absolute inset-0
+            w-full h-full
+            object-fill rounded
+          "
           src={product.gallery[0]}
           alt={product.name}
         />
+
+        {/* Out of stock overlay */}
         {!product.inStock && (
-          <div className="absolute inset-0 bg-white/50 flex items-center justify-center text-[#161617] font-thin text-lg sm:text-xl md:text-2xl">
+          <div
+            className="
+            absolute inset-0
+            bg-white/50
+            flex items-center justify-center
+            text-[#161617] font-thin
+            text-lg sm:text-xl
+          "
+          >
             OUT OF STOCK
           </div>
         )}
+
+        {/* Quick add button — shows on hover */}
         {product.inStock && (
           <button
             onClick={(e) => handleQuickShop(e, product)}
-            className="absolute z-10 bottom-4 right-4 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            className="
+              absolute z-10 bottom-4 right-4
+              w-14 h-14 sm:w-16 sm:h-16
+              rounded-full
+              flex items-center justify-center
+              opacity-0 group-hover:opacity-100
+              transition-opacity duration-200
+             
+            "
           >
             <img
-              src="circleIcon.png"
-              className="w-6 sm:w-8"
+              src="/circleIcon.png"
+              className="w-full sm:w-full"
               alt="Add To Cart"
             />
           </button>
         )}
       </div>
-      <div className="mt-4 flex flex-col">
-        <div className="font-thin text-base sm:text-lg md:text-[18px]">
-          {product.name}
-        </div>
-        <div className="font-bold text-base sm:text-lg md:text-[18px] pt-1">
+
+      {/* Product info */}
+      <div className="mt-4 flex flex-col gap-1">
+        <p className="font-thin text-base sm:text-lg">{product.name}</p>
+        <p className="font-bold text-base sm:text-lg">
           {price?.currency?.symbol}
           {price.amount.toFixed(2)}
-        </div>
+        </p>
       </div>
     </div>
   );

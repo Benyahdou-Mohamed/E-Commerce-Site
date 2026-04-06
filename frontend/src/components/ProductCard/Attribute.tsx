@@ -59,7 +59,7 @@ function Attribute({ attribute, selectedAttributes, onSelect }: Props) {
                   : "bg-white text-black border-gray-300 hover:border-black"
               }`}
             >
-              {item.displayValue}
+              {item.value}
             </button>
           );
         })}

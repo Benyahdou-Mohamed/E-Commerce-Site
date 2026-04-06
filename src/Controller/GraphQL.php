@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+/**
+ * Standalone demo handler (echo / sum) — not used by `public/index.php`, which uses {@see \App\GraphQL\Schema}.
+ */
 use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;

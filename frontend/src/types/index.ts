@@ -6,7 +6,7 @@ export interface AttributeItem {
   value: string;
 }
 
-export interface Attribute {
+export interface AttributeSet {
   id: string;
   name: string;
   type: string;

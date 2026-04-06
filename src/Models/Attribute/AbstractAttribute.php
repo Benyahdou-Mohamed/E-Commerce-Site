@@ -9,7 +9,7 @@ abstract class AbstractAttribute
     private string $id;
     private string $name;
     private string $type;
-    private array $items;
+    private array  $items;
 
     public function __construct(array $data)
     {
@@ -18,6 +18,11 @@ abstract class AbstractAttribute
         $this->type  = $data['type'];
         $this->items = $data['items'] ?? [];
     }
+
+    //  Force subclasses to implement 
+    abstract public function getType(): string;
+    abstract public function isValidValue(string $value): bool;
+    abstract public function formatValue(string $value): string;
 
     public function getId(): string
     {
@@ -29,10 +34,7 @@ abstract class AbstractAttribute
         return $this->name;
     }
 
-    public function getType(): string
-    {
-        return $this->type;
-    }
+  
 
     public function getItems(): array
     {
@@ -44,7 +46,7 @@ abstract class AbstractAttribute
         return [
             'id'    => $this->id,
             'name'  => $this->name,
-            'type'  => $this->type,
+            'type'  => $this->getType(),
             'items' => $this->items,
         ];
     }

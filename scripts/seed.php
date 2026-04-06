@@ -48,7 +48,7 @@ $attrItemStmt = $db->prepare("
 foreach ($data['data']['products'] as $product) {
     foreach ($product['attributes'] as $attr) {
 
-        // ✅ Unique attribute id per product
+        // Unique attribute id per product
         $uniqueAttrId = $product['id'] . '_' . $attr['id'];
 
         $attrStmt->execute([
@@ -59,7 +59,7 @@ foreach ($data['data']['products'] as $product) {
 
         foreach ($attr['items'] as $item) {
 
-            // ✅ Unique item id per product
+            // Unique item id per product
             $uniqueItemId = $product['id'] . '_' . $item['id'];
 
             $attrItemStmt->execute([
@@ -103,7 +103,7 @@ foreach ($data['data']['products'] as $product) {
         continue;
     }
 
-    // ✅ Type based on attributes not category
+    //  Type based on attributes not category
     $type = !empty($product['attributes']) ? 'configurable' : 'simple';
 
     $productStmt->execute([
@@ -136,7 +136,7 @@ foreach ($data['data']['products'] as $product) {
         ]);
     }
 
-    // ✅ Link product to UNIQUE attribute id
+    // Link product to UNIQUE attribute id
     foreach ($product['attributes'] as $attr) {
         $uniqueAttrId = $product['id'] . '_' . $attr['id'];
 

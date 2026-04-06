@@ -45,25 +45,28 @@ class ProductResolver
 
     public static function getById(string $id): array
     {
-        $db    = Database::getInstance();
-        $query = $db->prepare("
-            SELECT p.*, c.name AS category_name
-            FROM products p
-            JOIN categories c ON p.category_id = c.id
-            WHERE p.id = :id
-        ");
-        $query->execute([':id' => $id]);
-        $data = $query->fetch();
+    $db    = Database::getInstance();
+    $query = $db->prepare("
+        SELECT p.*, c.name AS category_name
+        FROM products p
+        JOIN categories c ON p.category_id = c.id
+        WHERE p.id = :id
+    ");
+    $query->execute([':id' => $id]);
+    $data = $query->fetch();
 
-        if (!$data) {
-            return [];
-        }
+    if (!$data) {
+        return [];
+    }
 
-        $data['gallery']    = self::getGallery($data['id']);
-        $data['prices']     = self::getPrices($data['id']);
-        $data['attributes'] = AttributeResolver::getByProductId($data['id']);
+    $data['gallery']    = self::getGallery($data['id']);
+    $data['prices']     = self::getPrices($data['id']);
+    $data['attributes'] = AttributeResolver::getByProductId($data['id']);
 
-        return ProductFactory::create($data)->toArray();
+   
+    $product = ProductFactory::create($data);
+
+    return $product->toArray();  // ← using model method
     }
 
     private static function getGallery(string $id): array

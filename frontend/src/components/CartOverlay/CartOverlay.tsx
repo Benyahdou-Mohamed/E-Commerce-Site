@@ -78,7 +78,7 @@ export const CartOverlay = () => {
             <span className="font-medium text-sm">Total</span>
             <span className="font-bold text-lg">${totalPrice.toFixed(2)}</span>
           </div>
-          
+
           {/* Place Order button */}
           <button
             onClick={handlePlaceOrder}
