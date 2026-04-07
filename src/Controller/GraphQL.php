@@ -4,78 +4,53 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-/**
- * Standalone demo handler (echo / sum) — not used by `public/index.php`, which uses {@see \App\GraphQL\Schema}.
- */
+use App\GraphQL\Schema;
+use Dotenv\Dotenv;
+use GraphQL\Error\DebugFlag;
 use GraphQL\GraphQL as GraphQLBase;
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
-use GraphQL\Type\Schema;
-use GraphQL\Type\SchemaConfig;
-use RuntimeException;
 use Throwable;
 
 class GraphQL
 {
     public static function handle()
     {
+        self::setHeaders();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            return json_encode(['data' => null]);
+        }
+
         try {
-            $queryType = new ObjectType([
-                'name' => 'Query',
-                'fields' => [
-                    'echo' => [
-                        'type' => Type::string(),
-                        'args' => [
-                            'message' => ['type' => Type::string()],
-                        ],
-                        'resolve' => static fn ($rootValue, array $args): string => $rootValue['prefix'] . $args['message'],
-                    ],
-                ],
-            ]);
-
-            $mutationType = new ObjectType([
-                'name' => 'Mutation',
-                'fields' => [
-                    'sum' => [
-                        'type' => Type::int(),
-                        'args' => [
-                            'x' => ['type' => Type::int()],
-                            'y' => ['type' => Type::int()],
-                        ],
-                        'resolve' => static fn ($calc, array $args): int => $args['x'] + $args['y'],
-                    ],
-                ],
-            ]);
-
-            // See docs on schema options:
-            // https://webonyx.github.io/graphql-php/schema-definition/#configuration-options
-            $schema = new Schema(
-                (new SchemaConfig())
-                ->setQuery($queryType)
-                ->setMutation($mutationType)
-            );
-
             $rawInput = file_get_contents('php://input');
-            if ($rawInput === false) {
-                throw new RuntimeException('Failed to get php://input');
-            }
-
-            $input = json_decode($rawInput, true);
-            $query = $input['query'];
+            $input = json_decode($rawInput ?: '{}', true) ?: [];
+            $query = $input['query'] ?? '';
             $variableValues = $input['variables'] ?? null;
-
-            $rootValue = ['prefix' => 'You said: '];
-            $result = GraphQLBase::executeQuery($schema, $query, $rootValue, null, $variableValues);
-            $output = $result->toArray();
+            $schema = Schema::build();
+            $result = GraphQLBase::executeQuery($schema, $query, null, null, $variableValues);
+            $output = $result->toArray(DebugFlag::INCLUDE_DEBUG_MESSAGE);
         } catch (Throwable $e) {
             $output = [
-                'error' => [
+                'errors' => [[
                     'message' => $e->getMessage(),
-                ],
+                ]],
             ];
         }
 
-        header('Content-Type: application/json; charset=UTF-8');
         return json_encode($output);
+    }
+
+    private static function setHeaders(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET,POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type');
+        header('Content-Type: application/json; charset=UTF-8');
+        header('ngrok-skip-browser-warning: true');
+
+        static $loaded = false;
+        if (!$loaded && file_exists(__DIR__ . '/../../.env')) {
+            Dotenv::createImmutable(__DIR__ . '/../../')->safeLoad();
+            $loaded = true;
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\models\Product;
+namespace App\Models\Product;
 
 class ConfigurableProduct extends AbstractProduct
 {

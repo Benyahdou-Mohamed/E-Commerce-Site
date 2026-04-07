@@ -13,7 +13,7 @@ class AttributeItemType extends ObjectType
     {
         parent::__construct(
             [
-                'name:' => "AttributeItem",
+                'name' => "AttributeItem",
                 'fields' => function () {
                     return [
                     'id' => Type::string(),

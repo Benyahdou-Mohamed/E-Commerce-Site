@@ -7,14 +7,14 @@ namespace App\Models\Category;
 class CategoryFactory
 {
     private static array $typeMap = [
-        'all'     => AllCategory::class,
-        'Specific' => SpecificCategory::class,
+        'all'      => AllCategory::class,
+        'specific' => SpecificCategory::class,
     ];
 
     public static function create(array $data): AbstractCategory
     {
-        $type  = $data['name'] === 'all' ? 'all' : 'Specific';
-        $class = self::$typeMap[$type];
+        $type  = strtolower($data['name'] ?? '') === 'all' ? 'all' : 'specific';
+        $class = self::$typeMap[$type] ?? SpecificCategory::class;
         return new $class($data);
     }
 }

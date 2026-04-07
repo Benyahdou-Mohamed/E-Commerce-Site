@@ -13,7 +13,8 @@ class ProductFactory
 
     public static function create(array $data): AbstractProduct
     {
-        $type  = !empty($data['attributes']) ? 'configurable' : 'simple';
+        // Prefer type from database schema, fall back to attributes check
+        $type = $data['type'] ?? (!empty($data['attributes']) ? 'configurable' : 'simple');
         $class = self::$typeMap[$type] ?? SimpleProduct::class;
         return new $class($data);
     }

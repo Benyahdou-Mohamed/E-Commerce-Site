@@ -2,65 +2,43 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\GraphQL\Schema;
-use GraphQL\GraphQL;
-use GraphQL\Error\DebugFlag;
-
-
-
-// CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET,POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Content-Type: application/json');
-header('ngrok-skip-browser-warning: true');
-header('ngrok-skip-browser-warning:', 2);
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Content-Type: application/json; charset=UTF-8');
 
-
-
-set_exception_handler(function (\Throwable $e) {
-    header('Content-Type: application/json');
+set_exception_handler(function (Throwable $e): void {
     echo json_encode(['errors' => [['message' => $e->getMessage()]]]);
-    exit;
 });
 
-set_error_handler(function ($code, $message, $file, $line) {
-    header('Content-Type: application/json');
-    echo json_encode(['errors' => [['message' => "$message in $file on line $line"]]]);
-    exit;
+$dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r): void {
+    $r->post('/graphql', [App\Controller\GraphQL::class, 'handle']);
+    $r->addRoute('OPTIONS', '/graphql', [App\Controller\GraphQL::class, 'handle']);
+    // Keep skeleton /graphql route, but also support project root (/public/) used by frontend env.
+    $r->post('/', [App\Controller\GraphQL::class, 'handle']);
+    $r->addRoute('OPTIONS', '/', [App\Controller\GraphQL::class, 'handle']);
 });
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
-// Handle preflight request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
+$basePath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+if ($basePath !== '' && str_starts_with($uri, $basePath)) {
+    $uri = substr($uri, strlen($basePath)) ?: '/';
 }
+$routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $uri);
 
-// Get the request body
-$raw   = file_get_contents('php://input');
-$input = json_decode($raw, true);
-
-$query     = $input['query']     ?? '';
-$variables = $input['variables'] ?? null;
-
-try {
-    $schema = Schema::build();
-    $result = GraphQL::executeQuery(
-        $schema,
-        $query,
-        null,
-        null,
-        $variables
-    );
-
-    $output = $result->toArray(DebugFlag::INCLUDE_DEBUG_MESSAGE);
-} catch (\Throwable $e) {
-    $output = [
-        'errors' => [
-            ['message' => $e->getMessage()]
-        ]
-    ];
+switch ($routeInfo[0]) {
+    case FastRoute\Dispatcher::NOT_FOUND:
+        http_response_code(404);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['errors' => [['message' => 'Route not found']]]);
+        break;
+    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        http_response_code(405);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['errors' => [['message' => 'Method not allowed']]]);
+        break;
+    case FastRoute\Dispatcher::FOUND:
+        $handler = $routeInfo[1];
+        echo $handler();
+        break;
 }
-echo json_encode($output);
-
