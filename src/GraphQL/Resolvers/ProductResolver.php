@@ -7,12 +7,14 @@ namespace App\GraphQL\Resolvers;
 use App\Config\Database;
 use App\Models\Product\ProductFactory;
 use App\GraphQL\Resolvers\AttributeResolver;
+
 class ProductResolver
 {
     public static function getAll(?string $categoryName = null): array
     {
         $db = Database::getInstance();
 
+        // Build category-aware query (`all` means no filter).
         if ($categoryName && $categoryName !== 'all') {
             $query = $db->prepare("
                 SELECT p.*, c.name AS category_name
@@ -33,10 +35,12 @@ class ProductResolver
         $products = [];
 
         foreach ($query->fetchAll() as $row) {
+            // Enrich each product with related data before model creation.
             $row['gallery']    = self::getGallery($row['id']);
             $row['prices']     = self::getPrices($row['id']);
             $row['attributes'] = AttributeResolver::getByProductId($row['id']);
 
+            // Use product model polymorphism via factory.
             $products[] = ProductFactory::create($row)->toArray();
         }
 
@@ -45,28 +49,27 @@ class ProductResolver
 
     public static function getById(string $id): array
     {
-    $db    = Database::getInstance();
-    $query = $db->prepare("
-        SELECT p.*, c.name AS category_name
-        FROM products p
-        JOIN categories c ON p.category_id = c.id
-        WHERE p.id = :id
-    ");
-    $query->execute([':id' => $id]);
-    $data = $query->fetch();
+        $db    = Database::getInstance();
+        $query = $db->prepare("
+            SELECT p.*, c.name AS category_name
+            FROM products p
+            JOIN categories c ON p.category_id = c.id
+            WHERE p.id = :id
+        ");
+        $query->execute([':id' => $id]);
+        $data = $query->fetch();
 
-    if (!$data) {
-        return [];
-    }
+        if (!$data) {
+            return [];
+        }
 
-    $data['gallery']    = self::getGallery($data['id']);
-    $data['prices']     = self::getPrices($data['id']);
-    $data['attributes'] = AttributeResolver::getByProductId($data['id']);
+        // Keep single-product response consistent with list response shape.
+        $data['gallery']    = self::getGallery($data['id']);
+        $data['prices']     = self::getPrices($data['id']);
+        $data['attributes'] = AttributeResolver::getByProductId($data['id']);
 
-   
-    $product = ProductFactory::create($data);
-
-    return $product->toArray();  // ← using model method
+        $product = ProductFactory::create($data);
+        return $product->toArray();
     }
 
     private static function getGallery(string $id): array

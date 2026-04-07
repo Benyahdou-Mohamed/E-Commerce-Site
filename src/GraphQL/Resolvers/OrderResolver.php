@@ -16,10 +16,10 @@ class OrderResolver
         $db = Database::getInstance();
 
         try {
-            // Start transaction
+            // Wrap full order creation in a transaction for atomicity.
             $db->beginTransaction();
 
-            // Step 1 — insert order to database first to get id
+            // 1) Create order row first to obtain generated order id.
             $stmt = $db->prepare("
                 INSERT INTO orders (created_at)
                 VALUES (NOW())
@@ -28,17 +28,16 @@ class OrderResolver
 
             $orderId = (int) $db->lastInsertId();
 
-            // Create Order model AFTER we have the id
+            // Map persisted data to model for typed access.
             $order = new Order([
                 'id'         => $orderId,
                 'created_at' => date('Y-m-d H:i:s'),
                 'items'      => $items,
             ]);
 
-            // Step 2 — validate and insert each order item
+            // 2) Validate each item and persist corresponding order_item row.
             foreach ($items as $item) {
-
-                // Fetch raw product data
+                // Resolve product data from catalog domain.
                 $productData = ProductResolver::getById($item['productId']);
 
                 if (empty($productData)) {
@@ -47,23 +46,23 @@ class OrderResolver
                     );
                 }
 
-                // Create product model using factory
+                // Convert to product model to apply domain rules.
                 $product = ProductFactory::create($productData);
 
-                // Check inStock using model method
+                // Block checkout for out-of-stock products.
                 if (!$product->inStock()) {
                     throw new \RuntimeException(
                         "Product is out of stock: " . $item['productId']
                     );
                 }
 
-                // Decode selected attributes
+                // Normalize attributes payload from JSON string/object to array.
                 $selectedAttributes = $item['selectedAttributes'];
                 while (is_string($selectedAttributes)) {
                     $selectedAttributes = json_decode($selectedAttributes, true) ?? [];
                 }
 
-                // Validate attributes using model method
+                // Ensure configurable products include required selections.
                 if (!$product->canAddToCart($selectedAttributes)) {
                     throw new \RuntimeException(
                         "Cannot add to cart: " . $item['productId'] .
@@ -71,14 +70,14 @@ class OrderResolver
                     );
                 }
 
-                // Create OrderItem model
+                // Persist a canonical JSON value for selected attributes.
                 $orderItem = new OrderItem([
                     'productId'          => $item['productId'],
                     'quantity'           => $item['quantity'],
                     'selectedAttributes' => json_encode($selectedAttributes),
                 ]);
 
-                // Use model getters for insert
+                // Insert order item using model getters to keep mapping explicit.
                 $stmt = $db->prepare("
                     INSERT INTO order_items
                         (order_id, product_id, quantity, selected_attributes)
@@ -94,12 +93,13 @@ class OrderResolver
                 ]);
             }
 
-            // All good — commit
+            // All checks passed; finalize transaction.
             $db->commit();
 
             return true;
 
         } catch (\Throwable $e) {
+            // Any error rolls back the entire order.
             $db->rollBack();
             return false;
         }

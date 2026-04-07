@@ -9,11 +9,13 @@ use PDOException;
 
 class Database
 {
+    // Shared PDO instance for the whole request.
     private static ?PDO $instance = null;
 
     public static function getInstance(): PDO
     {
         if (self::$instance === null) {
+            // Read DB connection values from environment.
             $host = 'localhost';
             $port = $_ENV['MYSQLPORT'];
             $db   = $_ENV['MYSQL_DATABASE'] ;
@@ -21,6 +23,7 @@ class Database
             $pass = $_ENV['MYSQLPASSWORD'];
 
             try {
+                // Create PDO connection with strict error handling.
                 self::$instance = new PDO(
                     "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4",
                     $user,
